@@ -59,7 +59,7 @@ void device_set_preset(hid_device *device, const device_preset_t *preset)
 }
 
 const char *argp_program_version = "MSI GE66 Raider RGB 0.1";
-const char *argp_program_bug_address = "<luisalbertopm@live.com>";
+const char *argp_program_bug_address = "<https://github.com/luisalbertopm/msi-ge66-raider-rgb/issues>";
 
 static char doc[] = "MSI GE66 Raider RGB - A tool to control the RGB lighting of the MSI GE66 Raider laptop";
 
