@@ -5,58 +5,7 @@
 #include <argp.h>
 #include <unistd.h>
 
-#include <hidapi/hidapi.h>
-
-typedef struct device_preset
-{
-    const char *name;
-    const unsigned char **data;
-    const unsigned int size;
-} device_preset_t;
-
-#include "aurora.inc"
-#include "keyboard.inc"
-
-#define KEYBOARD_VENDOR_ID 0x1038  // SteelSeries
-#define KEYBOARD_PRODUCT_ID 0x1122 // KLC
-#define AURORA_VENDOR_ID 0x1038    // SteelSeries
-#define AURORA_PRODUCT_ID 0x1132   // ALC
-
-static const device_preset_t device_preset_pairs[][2] = {{keyboard_preset_default, aurora_preset_default}, {keyboard_preset_dragon_shield, aurora_preset_dragon_shield}, {keyboard_preset_chakra, aurora_preset_chakra}, {keyboard_preset_disco, aurora_preset_disco}, {keyboard_preset_free_way, aurora_preset_macaw}, {keyboard_preset_drain, aurora_preset_rainbow}, {keyboard_preset_aqua, aurora_preset_blue_flash}, {keyboard_preset_rainbow_split, aurora_preset_rainbow}, {keyboard_preset_plain, aurora_preset_plain}, {keyboard_preset_disable, aurora_preset_disable}};
-
-const device_preset_t *search_preset(const device_preset_t *device_presets[], int size, char *name)
-{
-    for (int i = 0; i < size; i++)
-    {
-        const device_preset_t *device_preset = device_presets[i];
-        if (strcmp(device_preset->name, name) == 0)
-            return device_preset;
-    }
-    return NULL;
-}
-
-void device_set_preset(hid_device *device, const device_preset_t *preset)
-{
-    int error;
-    int preset_packets = preset->size / sizeof(const unsigned char *);
-    for (int i = 0; i < preset_packets; i++)
-    {
-        const unsigned char *data = preset->data[i];
-        if (i < preset_packets - 1)
-        {
-            int data_length = 524;
-            error = hid_send_feature_report(device, data + 36, data_length);
-        }
-        else
-        {
-            int data_length = 64;
-            error = hid_write(device, data + 36, data_length);
-        }
-        if (error < 0)
-            wprintf(L"%ls\n", hid_error(device));
-        usleep(10000);
-    }
-}
+#include "hid.h"
 
 const char *argp_program_version = "MSI GE66 Raider RGB 0.1";
 const char *argp_program_bug_address = "<https://github.com/luisalbertopm/msi-ge66-raider-rgb/issues>";
@@ -129,7 +78,7 @@ int main(int argc, char *argv[])
 
     if (arguments.demo)
     {
-        for (int i = 0; i < sizeof(device_preset_pairs) / sizeof(device_preset_pairs[0]); i++)
+        for (int i = 0; i < device_preset_pairs_size; i++)
         {
             const device_preset_t *keyboard_preset = &device_preset_pairs[i][0];
             const device_preset_t *aurora_preset = &device_preset_pairs[i][1];
@@ -152,7 +101,7 @@ int main(int argc, char *argv[])
 
         if (arguments.keyboard_preset != NULL)
         {
-            const device_preset_t *device_preset = search_preset(keyboard_presets, sizeof(keyboard_presets) / sizeof(const device_preset_t *), arguments.keyboard_preset);
+            const device_preset_t *device_preset = device_search_preset(keyboard_presets, keyboard_presets_size, arguments.keyboard_preset);
             if (device_preset != NULL)
                 device_set_preset(keyboard, device_preset);
             else
@@ -161,7 +110,7 @@ int main(int argc, char *argv[])
 
         if (arguments.aurora_preset != NULL)
         {
-            const device_preset_t *device_preset = search_preset(aurora_presets, sizeof(aurora_presets) / sizeof(const device_preset_t *), arguments.aurora_preset);
+            const device_preset_t *device_preset = device_search_preset(aurora_presets, aurora_presets_size, arguments.aurora_preset);
             if (device_preset != NULL)
                 device_set_preset(aurora, device_preset);
             else

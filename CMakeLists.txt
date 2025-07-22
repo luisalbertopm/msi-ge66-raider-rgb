@@ -4,6 +4,6 @@ project(MSI-GE66-Raider-RGB VERSION 0.1 LANGUAGES C)
 
 find_package(hidapi REQUIRED)
 
-add_executable(msi-rgb main.c)
+add_executable(msi-rgb hid.h hid.c main.c)
 
 target_link_libraries(msi-rgb PRIVATE hidapi::hidapi)

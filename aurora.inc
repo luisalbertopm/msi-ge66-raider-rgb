@@ -88,4 +88,5 @@ static const unsigned char aurora_preset_data_rainbow_2[100] = {0x1c, 0x00, 0x10
 static const unsigned char *aurora_preset_data_rainbow[] = {aurora_preset_data_rainbow_1, aurora_preset_data_rainbow_2};
 static const device_preset_t aurora_preset_rainbow = {"rainbow", aurora_preset_data_rainbow, sizeof(aurora_preset_data_rainbow)};
 
-static const device_preset_t *aurora_presets[] = {&aurora_preset_aurora, &aurora_preset_blue_flash, &aurora_preset_casino, &aurora_preset_chakra, &aurora_preset_default, &aurora_preset_disable, &aurora_preset_disco, &aurora_preset_dragon_shield, &aurora_preset_flux, &aurora_preset_macaw, &aurora_preset_plain, &aurora_preset_rainbow};
+const device_preset_t *aurora_presets[] = {&aurora_preset_aurora, &aurora_preset_blue_flash, &aurora_preset_casino, &aurora_preset_chakra, &aurora_preset_default, &aurora_preset_disable, &aurora_preset_disco, &aurora_preset_dragon_shield, &aurora_preset_flux, &aurora_preset_macaw, &aurora_preset_plain, &aurora_preset_rainbow};
+int aurora_presets_size = sizeof(aurora_presets) / sizeof(const device_preset_t *);
