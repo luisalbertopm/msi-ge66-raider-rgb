@@ -6,8 +6,8 @@
 
 #include "hid.h"
 
-#include "keyboard.inc"
-#include "aurora.inc"
+#include "keyboard.h"
+#include "aurora.h"
 
 const device_preset_t device_preset_pairs[][2] = {{keyboard_preset_default, aurora_preset_default}, {keyboard_preset_dragon_shield, aurora_preset_dragon_shield}, {keyboard_preset_chakra, aurora_preset_chakra}, {keyboard_preset_disco, aurora_preset_disco}, {keyboard_preset_free_way, aurora_preset_macaw}, {keyboard_preset_drain, aurora_preset_rainbow}, {keyboard_preset_aqua, aurora_preset_blue_flash}, {keyboard_preset_rainbow_split, aurora_preset_rainbow}, {keyboard_preset_plain, aurora_preset_plain}, {keyboard_preset_disable, aurora_preset_disable}};
 int device_preset_pairs_size = sizeof(device_preset_pairs) / sizeof(device_preset_pairs[0]);
